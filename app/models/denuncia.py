@@ -40,6 +40,8 @@ class DenunciaUpdate(BaseModel):
     status: StatusDenuncia | None = None
     usuario_id: int | None = None
 
-    
+class DenunciaOut(DenunciaBase):
+    id: int
+
     class Config:
         orm_mode = True
