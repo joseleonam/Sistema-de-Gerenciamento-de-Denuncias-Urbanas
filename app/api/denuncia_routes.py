@@ -65,7 +65,7 @@ def count_denuncias():
 def _generate_csv_rows(batch_size: int = 1000) -> Generator[str, None, None]:
     table = repo._table()
     first_line = True
-    for batch in table.to_pyarrow_table().to_batches(batch_size=batch_size):
+    for batch in table.to_pyarrow_table().to_batches(max_chunksize=batch_size):
         df = batch.to_pandas()
         if df.empty:
             continue

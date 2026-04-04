@@ -9,7 +9,7 @@ router = APIRouter()
 
 class HashRequest(BaseModel):
     text: str
-    algorithm: str = Field(..., regex="^(md5|sha1|sha256)$")
+    algorithm: str = Field(..., pattern="^(md5|sha1|sha256)$")
 
 
 class HashResponse(BaseModel):

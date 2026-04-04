@@ -31,7 +31,7 @@ class DeltaRepository(Generic[T]):
         return DeltaTable(str(self.table_path))
 
     def insert(self, item: T) -> T:
-        data = item.dict(exclude_none=True)
+        data = item.model_dump(exclude_none=True)
         new_id = self.seq.next_id()
         data["id"] = new_id
 
@@ -57,7 +57,7 @@ class DeltaRepository(Generic[T]):
     def list(self, page: int = 1, page_size: int = 20) -> List[T]:
         table = self._table()
         pyarrow_table = table.to_pyarrow_table()
-        batches = pyarrow_table.to_batches(batch_size=page_size)
+        batches = pyarrow_table.to_batches(max_chunksize=page_size)
 
         start = (page - 1) * page_size
         stop = start + page_size

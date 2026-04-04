@@ -24,6 +24,9 @@ class DenunciaBase(BaseModel):
     data_atualizacao: datetime | None = None
     usuario_id: int
 
+    class Config:
+        use_enum_values = True
+
 
 class DenunciaCreate(DenunciaBase):
     pass
@@ -40,8 +43,11 @@ class DenunciaUpdate(BaseModel):
     status: StatusDenuncia | None = None
     usuario_id: int | None = None
 
+    class Config:
+        use_enum_values = True
+
 class DenunciaOut(DenunciaBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
