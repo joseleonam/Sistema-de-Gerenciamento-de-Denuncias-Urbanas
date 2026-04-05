@@ -14,7 +14,7 @@ class DenunciaBase(BaseModel):
     cidade: str
     uf: str
     status: StatusDenuncia = Field(default=StatusDenuncia.aberta)
-    data_criacao: datetime
+    data_criacao: datetime | None = None
     data_atualizacao: datetime | None = None
     usuario_id: int
 

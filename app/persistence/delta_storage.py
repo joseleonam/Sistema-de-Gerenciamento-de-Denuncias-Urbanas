@@ -19,11 +19,6 @@ class DeltaRepository(Generic[T]):
         self.model = model
         self.seq = SeqManager(seq_file or f"{self.table_path}.seq")
 
-        if not self.table_path.exists():
-            # Create an empty delta table, no commit will record rows until insert.
-            empty = pd.DataFrame(columns=self._columns())
-            write_deltalake(str(self.table_path), empty, mode="overwrite")
-
     def _columns(self) -> List[str]:
         return list(self.model.schema().get("properties", {}).keys())
 
@@ -38,8 +33,8 @@ class DeltaRepository(Generic[T]):
         now = datetime.utcnow()
         if "data_criacao" in self._columns() and "data_criacao" not in data:
             data["data_criacao"] = now
-        if "data_atualizacao" in self._columns() and "data_atualizacao" not in data:
-            data["data_atualizacao"] = None
+
+         # ❌ NÃO definir data_atualizacao aqui
 
         df = pd.DataFrame([data])
         write_deltalake(str(self.table_path), df, mode="append")
