@@ -1,2 +1,0 @@
-{"remove":{"path":"part-00001-d9ebb753-3754-4dcc-b52c-867305262434-c000.snappy.parquet","dataChange":true,"deletionTimestamp":1775254562632,"extendedFileMetadata":true,"partitionValues":{},"size":4325}}
-{"commitInfo":{"timestamp":1775254562632,"operation":"DELETE","operationParameters":{"predicate":"id = 3"},"clientVersion":"delta-rs.0.17.1","readVersion":2,"operationMetrics":{"execution_time_ms":6813,"num_added_files":0,"num_copied_rows":0,"num_deleted_rows":1,"num_removed_files":1,"rewrite_time_ms":3,"scan_time_ms":2963}}}

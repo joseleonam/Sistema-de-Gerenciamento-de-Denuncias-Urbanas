@@ -1,5 +1,5 @@
 from datetime import datetime
-from io import StringIO
+from io import StringIO, BytesIO
 import csv
 import zipfile
 from typing import Generator
@@ -56,20 +56,25 @@ def export_csv():
 @router.get("/export.zip")
 def export_zip():
     def stream_zip() -> Generator[bytes, None, None]:
-        with StringIO() as csv_buffer:
-            # nao carrega tudo na memória fixo: processa em blocos
-            csv_buffer.write("")
-            # Cria arquivo zip em memória por pedaços
-            with zipfile.ZipFile(csv_buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-                # Criar nome interno e escrever conteúdo em pedaços
-                # Para não materializar tudo, gravamos em bytes temporários
+        # Usando BytesIO pois um arquivo ZIP é binário
+        with BytesIO() as zip_buffer:
+            with zipfile.ZipFile(zip_buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+                # O conteúdo do CSV ainda é texto, então mantemos o StringIO internamente
                 inner = StringIO()
                 for chunk in _generate_csv_rows():
                     inner.write(chunk)
+                
+                # writestr converte nosso texto para o arquivo dentro do ZIP
                 zf.writestr("denuncias.csv", inner.getvalue())
-            yield csv_buffer.getvalue().encode("utf-8")
+            
+            # Retorna diretamente os bytes do arquivo ZIP pronto
+            yield zip_buffer.getvalue()
 
-    return StreamingResponse(stream_zip(), media_type="application/zip", headers={"Content-Disposition": "attachment; filename=denuncias.zip"})
+    return StreamingResponse(
+        stream_zip(), 
+        media_type="application/zip", 
+        headers={"Content-Disposition": "attachment; filename=denuncias.zip"}
+    )
 
 
 
