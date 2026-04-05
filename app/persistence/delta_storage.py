@@ -45,34 +45,37 @@ class DeltaRepository(Generic[T]):
         write_deltalake(str(self.table_path), df, mode="append")
         return self.model(**data)
 
-    def get(self, record_id: int) -> Optional[T]:
+    def get(self, record_id: int) -> T | None:
         table = self._table()
-        batch = table.to_pyarrow_table(filters=[["id", "=", record_id]])
-        if batch.num_rows == 0:
-            return None
-        df = batch.to_pandas()
-        row = df.iloc[0].to_dict()
-        return self.model(**row)
 
-    def list(self, page: int = 1, page_size: int = 20) -> List[T]:
+        for batch in table.to_batches():
+            rows = batch.to_pylist()
+
+            for row in rows:
+                if row.get("id") == record_id:
+                    return self.model(**row)
+
+        return None
+
+    def list(self, page: int = 1, page_size: int = 20) -> list[T]:
         table = self._table()
-        pyarrow_table = table.to_pyarrow_table()
-        batches = pyarrow_table.to_batches(max_chunksize=page_size)
 
         start = (page - 1) * page_size
         stop = start + page_size
+
         collected = []
         idx = 0
-        for batch in batches:
-            batch_df = batch.to_pandas()
-            for _, row in batch_df.iterrows():
-                if idx >= start and idx < stop:
-                    collected.append(self.model(**row.to_dict()))
+
+        for batch in table.to_batches():
+            for row in batch.to_pylist():
+                if start <= idx < stop:
+                    collected.append(self.model(**row))
                 idx += 1
                 if idx >= stop:
                     break
             if idx >= stop:
                 break
+
         return collected
 
     def update(self, record_id: int, data: dict) -> Optional[T]:
@@ -93,7 +96,7 @@ class DeltaRepository(Generic[T]):
 
     def count(self) -> int:
         table = self._table()
-        return table.to_pyarrow_table().num_rows
+        return sum(batch.num_rows for batch in table.to_batches())
 
     def vacuum(self, retention_hours: Optional[int] = None) -> List[str]:
         table = self._table()
