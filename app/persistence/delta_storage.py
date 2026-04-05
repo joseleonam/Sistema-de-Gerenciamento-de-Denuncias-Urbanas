@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Generic, List, Optional, Type, TypeVar
+from typing import Generic, Type, TypeVar
 
 import pandas as pd
 from deltalake import DeltaTable, write_deltalake
@@ -24,22 +24,22 @@ class DeltaRepository(Generic[T]):
             empty = pd.DataFrame(columns=self._columns())
             write_deltalake(str(self.table_path), empty, mode="overwrite")
 
-    def _columns(self) -> List[str]:
+    def _columns(self) -> list[str]:
         return list(self.model.schema().get("properties", {}).keys())
 
     def _table(self) -> DeltaTable:
         return DeltaTable(str(self.table_path))
 
     def insert(self, item: T) -> T:
-        data = item.dict(exclude_none=True)
+        data = item.model_dump(exclude_none=True)
         new_id = self.seq.next_id()
         data["id"] = new_id
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if "data_criacao" in self._columns() and "data_criacao" not in data:
             data["data_criacao"] = now
         if "data_atualizacao" in self._columns() and "data_atualizacao" not in data:
-            data["data_atualizacao"] = None
+            data["data_atualizacao"] = now
 
         df = pd.DataFrame([data])
         write_deltalake(str(self.table_path), df, mode="append")
@@ -57,7 +57,7 @@ class DeltaRepository(Generic[T]):
     def list(self, page: int = 1, page_size: int = 20) -> List[T]:
         table = self._table()
         pyarrow_table = table.to_pyarrow_table()
-        batches = pyarrow_table.to_batches(batch_size=page_size)
+        batches = pyarrow_table.to_batches(max_chunksize=page_size)
 
         start = (page - 1) * page_size
         stop = start + page_size
@@ -75,7 +75,7 @@ class DeltaRepository(Generic[T]):
                 break
         return collected
 
-    def update(self, record_id: int, data: dict) -> Optional[T]:
+    def update(self, record_id: int, data: dict) -> T | None:
         table = self._table()
         existing = table.to_pyarrow_table(filters=[["id", "=", record_id]])
         if existing.num_rows == 0:
@@ -95,6 +95,6 @@ class DeltaRepository(Generic[T]):
         table = self._table()
         return table.to_pyarrow_table().num_rows
 
-    def vacuum(self, retention_hours: Optional[int] = None) -> List[str]:
+    def vacuum(self, retention_hours: int | None) -> list[str]:
         table = self._table()
         return table.vacuum(dry_run=False, retention_hours=retention_hours)

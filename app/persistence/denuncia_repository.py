@@ -1,5 +1,3 @@
-from typing import Optional
-
 from .delta_storage import DeltaRepository
 from ..models.denuncia import DenunciaCreate, DenunciaUpdate, DenunciaBase
 
@@ -11,13 +9,13 @@ class DenunciaRepository(DeltaRepository[DenunciaBase]):
     def insert_denuncia(self, denuncia: DenunciaCreate) -> DenunciaBase:
         return self.insert(denuncia)
 
-    def get_denuncia(self, id_: int) -> Optional[DenunciaBase]:
+    def get_denuncia(self, id_: int) -> DenunciaBase | None:
         return self.get(id_)
 
     def list_denuncias(self, page: int = 1, page_size: int = 20):
         return self.list(page=page, page_size=page_size)
 
-    def update_denuncia(self, id_: int, update: DenunciaUpdate) -> Optional[DenunciaBase]:
+    def update_denuncia(self, id_: int, update: DenunciaUpdate) -> DenunciaBase | None:
         data = {k: v for k, v in update.model_dump(exclude_none=True).items()}
         if not data:
             return self.get(id_)
@@ -29,5 +27,5 @@ class DenunciaRepository(DeltaRepository[DenunciaBase]):
     def count_denuncias(self) -> int:
         return self.count()
 
-    def vacuum_denuncias(self, retention_hours: Optional[int] = None):
+    def vacuum_denuncias(self, retention_hours: int | None):
         return self.vacuum(retention_hours=retention_hours)
