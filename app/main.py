@@ -6,7 +6,7 @@ from app.api.hash_routes import router as hash_router
 app = FastAPI(
     title="Sistema de Gerenciamento de Denúncias Urbanas",
     version="0.1.0",
-    description="API de exemplo usando Delta Lake para persistência de denúncias urbanas",
+    description="API usando Delta Lake para persistência de denúncias urbanas",
 )
 
 app.include_router(denuncia_router, prefix="/denuncias", tags=["denuncias"])
