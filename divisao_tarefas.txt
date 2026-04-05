@@ -6,3 +6,6 @@ jose leonam:
 Gabriel Lima:
     implementação da carga_inicial.py, funcionalização de exportação .csv e .zip,
     correção de bug de deltalake e povoamento do banco
+
+Jessé Serafim:
+    execução de testes e identificação de bugs de fastapi e dependencias pyproject.toml
