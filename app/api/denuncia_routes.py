@@ -25,38 +25,6 @@ def list_denuncias(page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, 
     return [DenunciaOut(**item.model_dump()) for item in repo.list_denuncias(page=page, page_size=page_size)]
 
 
-@router.get("/{id}", response_model=DenunciaOut)
-def get_denuncia(id: int):
-    result = repo.get_denuncia(id)
-    if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
-    return DenunciaOut(**result.model_dump())
-
-
-@router.put("/{id}", response_model=DenunciaOut)
-def update_denuncia(id: int, payload: DenunciaUpdate):
-    result = repo.update_denuncia(id, payload)
-    if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
-    return DenunciaOut(**result.model_dump())
-
-
-@router.patch("/{id}", response_model=DenunciaOut)
-def patch_denuncia(id: int, payload: DenunciaUpdate):
-    result = repo.update_denuncia(id, payload)
-    if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
-    return DenunciaOut(**result.model_dump())
-
-
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_denuncia(id: int):
-    deleted = repo.delete_denuncia(id)
-    if not deleted:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
-
-
 @router.get("/count")
 def count_denuncias():
     return {"count": repo.count_denuncias()}
@@ -102,3 +70,37 @@ def export_zip():
             yield csv_buffer.getvalue().encode("utf-8")
 
     return StreamingResponse(stream_zip(), media_type="application/zip", headers={"Content-Disposition": "attachment; filename=denuncias.zip"})
+
+
+
+@router.get("/{id}", response_model=DenunciaOut)
+def get_denuncia(id: int):
+    result = repo.get_denuncia(id)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
+    return DenunciaOut(**result.model_dump())
+
+
+@router.put("/{id}", response_model=DenunciaOut)
+def update_denuncia(id: int, payload: DenunciaUpdate):
+    result = repo.update_denuncia(id, payload)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
+    return DenunciaOut(**result.model_dump())
+
+
+@router.patch("/{id}", response_model=DenunciaOut)
+def patch_denuncia(id: int, payload: DenunciaUpdate):
+    result = repo.update_denuncia(id, payload)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
+    return DenunciaOut(**result.model_dump())
+
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_denuncia(id: int):
+    deleted = repo.delete_denuncia(id)
+    if not deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Denúncia não encontrada")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
