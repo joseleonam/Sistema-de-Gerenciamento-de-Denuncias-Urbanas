@@ -1,0 +1,8 @@
+jose leonam:
+    escolha do tema, implementação das entidades em app/models, app/api, app/persistence e main.py
+    organização do github e dependencias em pyproject.toml
+    estrutura de organização do projeto
+
+Gabriel Lima:
+    implementação da carga_inicial.py, funcionalização de exportação .csv e .zip,
+    correção de bug de deltalake e povoamento do banco

@@ -1,17 +1,10 @@
 from datetime import datetime
-from enum import Enum
 
 from pydantic import BaseModel, Field
-
-
-class StatusDenuncia(str, Enum):
-    aberta = "aberta"
-    em_analise = "em_analise"
-    resolvida = "resolvida"
+from app.models.status import StatusDenuncia
 
 
 class DenunciaBase(BaseModel):
-    id: int | None = None
     titulo: str
     descricao: str
     categoria: str
@@ -20,7 +13,7 @@ class DenunciaBase(BaseModel):
     cidade: str
     uf: str
     status: StatusDenuncia = Field(default=StatusDenuncia.aberta)
-    data_criacao: datetime
+    data_criacao: datetime | None = None
     data_atualizacao: datetime | None = None
     usuario_id: int
 
