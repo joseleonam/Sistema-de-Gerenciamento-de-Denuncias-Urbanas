@@ -8,6 +8,7 @@
   git add .
   
   git commit -m "Seu nome $(Get-Date)" windows
+  
   gitcommit -m "Seu nome $(date)" linux
   
   git push
