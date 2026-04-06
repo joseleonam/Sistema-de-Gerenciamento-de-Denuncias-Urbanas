@@ -5,6 +5,7 @@ from app.models.status import StatusDenuncia
 
 
 class DenunciaBase(BaseModel):
+    id: int | None = None
     titulo: str
     descricao: str
     categoria: str
