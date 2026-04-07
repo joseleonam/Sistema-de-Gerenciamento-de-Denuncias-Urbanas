@@ -22,11 +22,11 @@ class AtendimentoUpdate(BaseModel):
     concluido: bool | None = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AtendimentoOut(AtendimentoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
