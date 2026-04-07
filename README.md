@@ -14,3 +14,8 @@
   git push
   
   git pull
+
+apaga codigo local e atualiza com o git
+
+  git fetch origin
+  git reset --hard origin/main
