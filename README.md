@@ -4,7 +4,7 @@
 git branch
 git status
 git add .
-git commit -m "Seu nome $(Get-Date)"
+git commit -m "Jose leonam $(Get-Date)"
 git push
 git pull
 
