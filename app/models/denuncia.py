@@ -40,10 +40,16 @@ class DenunciaUpdate(BaseModel):
     class Config:
         use_enum_values = True
 
+
+class DenunciaDB(DenunciaBase):
+    id: int
+
+    class Config:
+        from_attributes = True
   
 class DenunciaOut(DenunciaBase):
     id: int
-    usuario: UsuarioOut
+    usuario: UsuarioOut | None = None
 
     class Config:
         from_attributes = True
