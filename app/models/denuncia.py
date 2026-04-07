@@ -3,6 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 from app.models.status import StatusDenuncia
+from app.models.usuario import UsuarioOut
 
 
 class DenunciaBase(BaseModel):
@@ -16,14 +17,13 @@ class DenunciaBase(BaseModel):
     status: StatusDenuncia = Field(default=StatusDenuncia.aberta)
     data_criacao: datetime | None = None
     data_atualizacao: datetime | None = None
-    usuario_id: int
 
     class Config:
         use_enum_values = True
 
 
 class DenunciaCreate(DenunciaBase):
-    pass
+    usuario_id: int
 
 
 class DenunciaUpdate(BaseModel):
@@ -40,8 +40,10 @@ class DenunciaUpdate(BaseModel):
     class Config:
         use_enum_values = True
 
+  
 class DenunciaOut(DenunciaBase):
     id: int
+    usuario: UsuarioOut
 
     class Config:
         from_attributes = True

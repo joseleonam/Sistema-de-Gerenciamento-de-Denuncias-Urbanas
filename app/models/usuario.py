@@ -19,7 +19,7 @@ class UsuarioUpdate(BaseModel):
     telefone: str | None = Field(default=None, min_length=8, max_length=20)
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UsuarioOut(UsuarioBase):
@@ -27,4 +27,4 @@ class UsuarioOut(UsuarioBase):
     data_criacao: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
