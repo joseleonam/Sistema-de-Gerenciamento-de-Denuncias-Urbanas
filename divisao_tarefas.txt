@@ -22,7 +22,7 @@ Relacionamentos:
   - Denuncia → Document: one-to-many
 
 ========================================================================
-MEMBRO 1 - [Nome do Membro 1]
+MEMBRO 1 - Jessé Serafim de Lima
 ========================================================================
 
 Responsabilidades:
