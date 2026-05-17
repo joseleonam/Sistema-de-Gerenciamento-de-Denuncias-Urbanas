@@ -107,7 +107,7 @@ async def seed(session: AsyncSession) -> None:
     print("🌱 Iniciando carga de dados...")
 
     # ── 1. Categorias (12 fixas + contextuais) ──────────────────────────
-    print("  📂 Criando categorias...")
+    print("Criando categorias...")
     categorias = []
     for nome, descricao in CATEGORIAS_DATA:
         cat = Categoria(nome=nome, descricao=descricao, ativa=True)
@@ -117,7 +117,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {len(categorias)} categorias criadas")
 
     # ── 2. Usuários (150) ────────────────────────────────────────────────
-    print("  👤 Criando usuários...")
+    print("Criando usuários...")
     usuarios = []
     emails_usados = set()
     cpfs_usados = set()
@@ -146,7 +146,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {len(usuarios)} usuários criados")
 
     # ── 3. Localizações (150) ─────────────────────────────────────────────
-    print("  📍 Criando localizações...")
+    print("Criando localizações...")
     localizacoes = []
     for _ in range(150):
         bairro = random.choice(BAIRROS_FORTALEZA)
@@ -168,7 +168,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {len(localizacoes)} localizações criadas")
 
     # ── 4. Status + Denúncias (150) ────────────────────────────────────────
-    print("  📋 Criando denúncias e status...")
+    print("Criando denúncias e status...")
     denuncias = []
     for i in range(150):
         situacao = random.choices(
@@ -231,7 +231,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {len(denuncias)} denúncias criadas")
 
     # ── 5. Associações Denuncia ↔ Categoria (many-to-many) ──────────────
-    print("  🔗 Associando denúncias às categorias...")
+    print("Associando denúncias às categorias...")
     assoc_count = 0
     for d in denuncias:
         num_cats = random.randint(1, 3)
@@ -244,7 +244,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {assoc_count} associações criadas")
 
     # ── 6. Atendimentos (120) ──────────────────────────────────────────────
-    print("  🔧 Criando atendimentos...")
+    print("Criando atendimentos...")
     atendimentos_count = 0
     denuncias_com_atendimento = random.sample(denuncias, k=min(120, len(denuncias)))
     for d in denuncias_com_atendimento:
@@ -274,7 +274,7 @@ async def seed(session: AsyncSession) -> None:
     print(f"     ✓ {atendimentos_count} atendimentos criados")
 
     await session.commit()
-    print("\n✅ Carga concluída com sucesso!")
+    print("\nCarga concluída com sucesso!")
     print(f"   • {len(categorias)} categorias")
     print(f"   • {len(usuarios)} usuários")
     print(f"   • {len(localizacoes)} localizações")

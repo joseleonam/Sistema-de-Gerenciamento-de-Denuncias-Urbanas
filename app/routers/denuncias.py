@@ -39,6 +39,9 @@ async def _load_denuncia_full(denuncia_id: int, session: AsyncSession) -> Denunc
         select(Denuncia)
         .where(Denuncia.id == denuncia_id)
         .options(
+            selectinload(Denuncia.usuario),       # CORREÇÃO AQUI
+            selectinload(Denuncia.localizacao),   # CORREÇÃO AQUI
+            selectinload(Denuncia.status),        # CORREÇÃO AQUI
             selectinload(Denuncia.categorias),
             selectinload(Denuncia.atendimentos),
             selectinload(Denuncia.documents),
@@ -60,22 +63,18 @@ async def criar_denuncia(
     Cria uma nova denúncia urbana.
     Cria automaticamente um Status inicial como 'aberto'.
     """
-    # Valida usuário
     usuario = await session.get(Usuario, denuncia_in.usuario_id)
     if not usuario:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado.")
 
-    # Valida localização
     localizacao = await session.get(Localizacao, denuncia_in.localizacao_id)
     if not localizacao:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Localização não encontrada.")
 
-    # Cria o status inicial
     st = Status(situacao=SituacaoEnum.aberto, descricao="Denúncia registrada pelo cidadão.")
     session.add(st)
     await session.flush()
 
-    # Cria a denúncia
     denuncia = Denuncia(
         titulo=denuncia_in.titulo,
         descricao=denuncia_in.descricao,
@@ -87,7 +86,6 @@ async def criar_denuncia(
     session.add(denuncia)
     await session.flush()
 
-    # Associa categorias (many-to-many)
     for cat_id in denuncia_in.categoria_ids:
         cat = await session.get(Categoria, cat_id)
         if not cat:
@@ -211,6 +209,9 @@ async def obter_denuncia(
         select(Denuncia)
         .where(Denuncia.id == denuncia_id)
         .options(
+            selectinload(Denuncia.usuario),       # CORREÇÃO AQUI
+            selectinload(Denuncia.localizacao),   # CORREÇÃO AQUI
+            selectinload(Denuncia.status),        # CORREÇÃO AQUI
             selectinload(Denuncia.categorias),
             selectinload(Denuncia.atendimentos),
             selectinload(Denuncia.documents),
@@ -239,16 +240,14 @@ async def atualizar_denuncia(
         setattr(denuncia, key, value)
     denuncia.updated_at = datetime.utcnow()
 
-    # Atualiza categorias se fornecidas
     if denuncia_in.categoria_ids is not None:
-        # Remove associações antigas
         old_cats = await session.execute(
             select(DenunciaCategoria).where(DenunciaCategoria.denuncia_id == denuncia_id)
         )
         for dc in old_cats.scalars().all():
             await session.delete(dc)
         await session.flush()
-        # Adiciona novas
+        
         for cat_id in denuncia_in.categoria_ids:
             cat = await session.get(Categoria, cat_id)
             if not cat:
