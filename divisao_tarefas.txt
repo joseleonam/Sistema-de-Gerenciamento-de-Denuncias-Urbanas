@@ -45,7 +45,7 @@ Tarefas realizadas:
   ✓ Endpoint de contagem de denúncias por usuário e por categoria
 
 ========================================================================
-MEMBRO 2 - [Nome do Membro 2]
+MEMBRO 2 - Francisco Gabriel da Silva Lima
 ========================================================================
 
 Responsabilidades:
