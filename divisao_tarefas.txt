@@ -1,0 +1,98 @@
+DIVISÃO DE TAREFAS - TP2: Sistema de Gerenciamento de Denúncias Urbanas
+========================================================================
+
+Tema: Sistema de Gerenciamento de Denúncias Urbanas
+(buracos, iluminação, lixo, alagamentos, etc. para órgãos públicos)
+
+Entidades implementadas:
+  - Usuario (cidadão denunciante)
+  - Categoria (tipo de problema: buraco, iluminação, lixo, etc.)
+  - Localizacao (endereço e coordenadas da ocorrência)
+  - Status (estado atual da denúncia: aberto, em análise, resolvido, etc.)
+  - Denuncia (relato principal — relaciona todas as entidades)
+  - Atendimento (resposta do órgão público)
+  - Document (metadados de imagens/PDFs de evidência)
+
+Relacionamentos:
+  - Denuncia → Usuario: many-to-one
+  - Denuncia → Localizacao: many-to-one
+  - Denuncia → Status: one-to-one
+  - Denuncia ↔ Categoria: many-to-many (via tabela denuncia_categoria)
+  - Denuncia → Atendimento: one-to-many
+  - Denuncia → Document: one-to-many
+
+========================================================================
+MEMBRO 1 - [Nome do Membro 1]
+========================================================================
+
+Responsabilidades:
+  - Definição das entidades e modelagem do banco de dados (models.py)
+  - Configuração do projeto: pyproject.toml, .env, .python-version
+  - Configuração do banco de dados assíncrono (core/database.py, core/config.py)
+  - Configuração do Alembic (alembic.ini, migrations/env.py)
+  - Criação da migração inicial (migrations/versions/0001_initial.py)
+  - Router de Usuários (routers/usuarios.py) — CRUD completo
+  - Router de Categorias (routers/categorias.py) — CRUD completo
+  - Endpoint de estatísticas: denúncias por categoria
+
+Tarefas realizadas:
+  ✓ Definição dos modelos SQLModel com relacionamentos corretos
+  ✓ Configuração do engine assíncrono com aiosqlite/asyncpg
+  ✓ Implementação do env.py do Alembic com suporte assíncrono
+  ✓ Criação da migração SQL inicial (render_as_batch para SQLite)
+  ✓ CRUD de Usuários com paginação via fastapi-pagination
+  ✓ CRUD de Categorias com filtros por nome
+  ✓ Endpoint de contagem de denúncias por usuário e por categoria
+
+========================================================================
+MEMBRO 2 - [Nome do Membro 2]
+========================================================================
+
+Responsabilidades:
+  - Router de Localizações (routers/localizacoes.py)
+  - Router de Status (routers/status.py)
+  - Router de Atendimentos (routers/atendimentos.py)
+  - Endpoint de estatísticas: custo por órgão, contagem por situação
+  - Aplicação principal (app/main.py): registro de routers, middleware, handlers globais
+
+Tarefas realizadas:
+  ✓ CRUD de Localizações com filtros por bairro/cidade/estado
+  ✓ CRUD de Status com filtros por situação
+  ✓ CRUD de Atendimentos com filtros por órgão e status de conclusão
+  ✓ Agregação de custo por órgão responsável
+  ✓ Configuração do FastAPI com CORS, handlers de exceção globais
+  ✓ Integração com fastapi-pagination (add_pagination)
+  ✓ Documentação da API via OpenAPI/Swagger
+
+========================================================================
+MEMBRO 3 - [Nome do Membro 3]
+========================================================================
+
+Responsabilidades:
+  - Router de Denúncias (routers/denuncias.py) — entidade central e mais complexa
+  - Router de Documentos (routers/documents.py) — upload/download de arquivos
+  - Script de carga (seed.py) com Faker pt_BR
+  - Consultas complexas: múltiplos filtros, agregações, classificações
+
+Tarefas realizadas:
+  ✓ CRUD completo de Denúncias com eager loading (selectinload)
+  ✓ Filtros avançados: título parcial, prioridade, situação, categoria, bairro, ano
+  ✓ Atualização de status via PATCH /denuncias/{id}/status
+  ✓ Gerenciamento de relacionamento many-to-many (categoria_ids)
+  ✓ Upload de imagens/PDFs (JPEG, PNG, GIF, PDF) com validação de tipo e tamanho
+  ✓ Download/visualização de arquivos via FileResponse
+  ✓ Substituição e remoção de arquivos (com exclusão do arquivo físico)
+  ✓ Estatísticas: total de denúncias, por categoria, por prioridade, por bairro
+  ✓ Script seed.py com 150 registros por entidade principal usando Faker pt_BR
+
+========================================================================
+CONSULTAS IMPLEMENTADAS (conforme requisito):
+========================================================================
+
+a) Por ID: GET /api/v1/denuncias/{id}, /usuarios/{id}, /categorias/{id}
+b) Filtro por relacionamento: GET /api/v1/usuarios/{id}/denuncias, /categorias/{id}/denuncias
+c) Busca parcial por texto: ?titulo=buraco, ?nome=silva, ?bairro=meireles
+d) Filtro por ano: GET /api/v1/denuncias?ano=2024
+e) Agregações e contagens: /estatisticas/total, /por-categoria, /por-prioridade
+f) Classificação/ordenação: results ordered by created_at, nome, count
+g) Consultas multi-entidade: /por-bairro (join Denuncia+Localizacao), custo-por-orgao

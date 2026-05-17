@@ -1,0 +1,28 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Cache e ficheiros compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+
+# Ficheiros de ambiente (MUITO IMPORTANTE NÃO SUBIR O .ENV)
+.env
+.env.*
+
+# Banco de dados SQLite local
+*.db
+*.sqlite3
+denuncias_urbanas.db
+
+# Gestor de pacotes uv
+.uv/
+uv.lock
+
+# Pastas da aplicação
+uploads/
