@@ -22,7 +22,7 @@ Relacionamentos:
   - Denuncia → Document: one-to-many
 
 ========================================================================
-MEMBRO 1 - [Nome do Membro 1]
+MEMBRO 1 - Jessé Serafim de Lima
 ========================================================================
 
 Responsabilidades:
@@ -65,7 +65,7 @@ Tarefas realizadas:
   ✓ Documentação da API via OpenAPI/Swagger
 
 ========================================================================
-MEMBRO 3 - [Nome do Membro 3]
+MEMBRO 3 - [Jose Leonam]
 ========================================================================
 
 Responsabilidades:
