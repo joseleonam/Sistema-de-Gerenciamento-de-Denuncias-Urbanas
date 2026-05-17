@@ -21,16 +21,12 @@ API RESTful para registro e acompanhamento de problemas urbanos (buracos, ilumin
 ```bash
 # 1. Instalar dependências
 uv sync
-
 # 2. Configurar o banco (editar .env se necessário)
 # Por padrão usa SQLite local
-
 # 3. Executar as migrações
 uv run alembic upgrade head
-
 # 4. Popular o banco com dados de teste
 uv run python seed.py
-
 # 5. Iniciar o servidor
 uv run uvicorn app.main:app --reload
 ```
