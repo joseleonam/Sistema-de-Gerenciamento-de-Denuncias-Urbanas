@@ -65,7 +65,7 @@ Tarefas realizadas:
   ✓ Documentação da API via OpenAPI/Swagger
 
 ========================================================================
-MEMBRO 3 - [Jose Leonam]
+MEMBRO 3 - Jose Leonam cunha da silva
 ========================================================================
 
 Responsabilidades:
